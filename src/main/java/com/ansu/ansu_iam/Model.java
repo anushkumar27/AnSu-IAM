@@ -35,7 +35,11 @@ public class Model {
 			m = new Model();
 			//System.out.println(m.createApplication("Text1"));"
 			//System.out.println(m.generateToken("a7038b29-c16b-4f2a-aeb3-74652c0524cb", "123", "7ebe7894-4a80-47ce-b64f-3d9980a3ee45"));
-			System.out.println(m.validateToken("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "d7a05c08-f941-4a47-9316-15eeb063617b"));
+//			System.out.println(m.validateToken("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "d7a05c08-f941-4a47-9316-15eeb063617b"));
+			//System.out.println(m.updateTime("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", 500));
+			//System.out.println(m.invalidateToken("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "0fa5dac4-429e-450b-8232-39054eb2b710"));
+			//System.out.println(m.removeUser("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "a7038b29-c16b-4f2a-aeb3-74652c0524cb"));
+			System.out.println(m.getAppId("Text12"));
 		} catch (ClassNotFoundException | SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -239,11 +243,152 @@ public class Model {
 		return res;
 	}
 
-	public void updateTime(String appId) {}
+	public JsonObject updateTime(String appId, int seconds) {
+		Statement stmt = null;
+		String sql = null;
+		try {
+			stmt = conn.createStatement();
+			sql = "SELECT * FROM `app` WHERE `appId`=\""+appId+"\""; 
+			ResultSet rs = stmt.executeQuery(sql);
+			// check if result is empty 
+			if(!rs.isBeforeFirst()) {
+				JsonObject error = Json.createObjectBuilder()
+					     .add("status", "Error")
+					     .add("payload", "Invalid AppId").build();
+				return error;
+			}
+			rs.close();
+		}catch(SQLException s) {
+			s.printStackTrace();
+			JsonObject error = Json.createObjectBuilder()
+				     .add("status", "Error")
+				     .add("payload", "Internal Server Error, Try again later and contact Sushi").build();
+			return error;
+		}
+		
+		try {
+			stmt = conn.createStatement();
+			sql = "UPDATE `app` SET `expiryTime`=\""+seconds+"\" WHERE `appId`=\""+appId+"\""; 
+			stmt.executeUpdate(sql);
+		}catch(SQLException s) {
+			s.printStackTrace();
+			JsonObject error = Json.createObjectBuilder()
+				     .add("status", "Error")
+				     .add("payload", "Internal Server Error, Try again later and contact Sushi").build();
+			return error;
+		}
+		JsonObject res = Json.createObjectBuilder()
+			     .add("status", "OK")
+			     .add("payload", "Success").build();
+		return res;
+	}
 	
-	public void invalidateToken(String appId, String token) {}
+	public JsonObject invalidateToken(String appId, String token) {
+		Statement stmt = null;
+		String sql = null;
+		try {
+			stmt = conn.createStatement();
+			sql = "SELECT * FROM `token` WHERE `appId`=\""+appId+"\" AND `token`=\""+token+"\""; 
+			ResultSet rs = stmt.executeQuery(sql);
+			// check if result is empty 
+			if(!rs.isBeforeFirst()) {
+				JsonObject error = Json.createObjectBuilder()
+					     .add("status", "Error")
+					     .add("payload", "Invalid AppId or Token").build();
+				return error;
+			}
+			rs.close();
+		}catch(SQLException s) {
+			s.printStackTrace();
+			JsonObject error = Json.createObjectBuilder()
+				     .add("status", "Error")
+				     .add("payload", "Internal Server Error, Try again later and contact Sushi").build();
+			return error;
+		}
+		
+		sql = "DELETE FROM `token` WHERE `appId`=\""+appId+"\"";
+		try {
+			stmt.executeUpdate(sql);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		JsonObject res = Json.createObjectBuilder()
+			     .add("status", "OK")
+			     .add("payload", "Success").build();
+		return res;
+	}
 	
-	public void removeUser(String appId, String uid) {}
+	public JsonObject removeUser(String appId, String uid) {
+		Statement stmt = null;
+		String sql = null;
+		try {
+			stmt = conn.createStatement();
+			sql = "SELECT * FROM `user` WHERE `appId`=\""+appId+"\" AND `uid`=\""+uid+"\""; 
+			ResultSet rs = stmt.executeQuery(sql);
+			// check if result is empty 
+			if(!rs.isBeforeFirst()) {
+				JsonObject error = Json.createObjectBuilder()
+					     .add("status", "Error")
+					     .add("payload", "Invalid AppId or uid").build();
+				return error;
+			}
+			rs.close();
+		}catch(SQLException s) {
+			s.printStackTrace();
+			JsonObject error = Json.createObjectBuilder()
+				     .add("status", "Error")
+				     .add("payload", "Internal Server Error, Try again later and contact Sushi").build();
+			return error;
+		}
+		
+		sql = "DELETE FROM `user` WHERE `appId`=\""+appId+"\" AND `uid`=\""+uid+"\"";
+		try {
+			stmt.executeUpdate(sql);
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		JsonObject res = Json.createObjectBuilder()
+			     .add("status", "OK")
+			     .add("payload", "Success").build();
+		return res;
+	}
 	
-	public void getAppId(String appName) {}
+	public JsonObject getAppId(String appName) {
+		Statement stmt = null;
+		String sql = null;
+		String appId = null;
+		try {
+			stmt = conn.createStatement();
+			sql = "SELECT `appId` FROM `app` WHERE `appName`=\""+appName+"\""; 
+			ResultSet rs = stmt.executeQuery(sql);
+			// check if result is empty 
+			if(!rs.isBeforeFirst()) {
+				JsonObject error = Json.createObjectBuilder()
+					     .add("status", "Error")
+					     .add("payload", "Invalid AppName").build();
+				return error;
+			}else {
+				rs.next();
+				appId = rs.getString("appId");
+			}
+			rs.close();
+		}catch(SQLException s) {
+			s.printStackTrace();
+			JsonObject error = Json.createObjectBuilder()
+				     .add("status", "Error")
+				     .add("payload", "Internal Server Error, Try again later and contact Sushi").build();
+			return error;
+		}
+		
+		JsonObject res = Json.createObjectBuilder()
+			     .add("status", "OK")
+			     .add("payload", appId).build();
+		return res;
+	}
 }
