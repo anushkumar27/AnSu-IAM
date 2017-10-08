@@ -4,7 +4,6 @@ import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.SimpleTimeZone;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -21,107 +20,79 @@ public class Model {
 	// Database credentials
 	static final String USER = "root";
 	static final String PASS = "";
-	
+
 	Connection conn = null;
-	
-	Model() throws ClassNotFoundException, SQLException{
+
+	Model() throws ClassNotFoundException, SQLException {
 		Class.forName("com.mysql.jdbc.Driver");
 		conn = DriverManager.getConnection(DB_URL, USER, PASS);
 	}
 	
-	public static void main( String args[]) {
-		Model m;
-		try {
-			m = new Model();
-			//System.out.println(m.createApplication("Text1"));"
-			//System.out.println(m.generateToken("a7038b29-c16b-4f2a-aeb3-74652c0524cb", "123", "7ebe7894-4a80-47ce-b64f-3d9980a3ee45"));
+//	public static void main( String args[]) {
+//		Model m;
+//		try {
+//			m = new Model();
+//			//System.out.println(m.createApplication("Text1"));"
+//			//System.out.println(m.generateToken("a7038b29-c16b-4f2a-aeb3-74652c0524cb", "123", "7ebe7894-4a80-47ce-b64f-3d9980a3ee45"));
 //			System.out.println(m.validateToken("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "d7a05c08-f941-4a47-9316-15eeb063617b"));
-			//System.out.println(m.updateTime("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", 500));
-			//System.out.println(m.invalidateToken("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "0fa5dac4-429e-450b-8232-39054eb2b710"));
-			//System.out.println(m.removeUser("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "a7038b29-c16b-4f2a-aeb3-74652c0524cb"));
-			System.out.println(m.getAppId("Text12"));
-		} catch (ClassNotFoundException | SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-	
-	
-	
-//	public ResultSet runQuery(String q) throws SQLException {
+//			//System.out.println(m.updateTime("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", 500));
+//			//System.out.println(m.invalidateToken("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "0fa5dac4-429e-450b-8232-39054eb2b710"));
+//			//System.out.println(m.removeUser("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "a7038b29-c16b-4f2a-aeb3-74652c0524cb"));
+//			System.out.println(m.getAppId("Text12"));
+//		} catch (ClassNotFoundException | SQLException e) {
+//			e.printStackTrace();
+//		}
 //		
-//		Statement stmt = null;
-//		
-//		stmt = conn.createStatement();
-//		ResultSet rs = stmt.executeQuery(q);
-//		
-//		stmt.close();
-//		
-//		return rs;
 //	}
-	
-	public JsonObject createApplication(String appName)  {
+
+	public JsonObject createApplication(String appName) {
 		Statement stmt = null;
 		String appId = UUID.randomUUID().toString();
 		String sql = null;
 		try {
 			stmt = conn.createStatement();
-			sql = "INSERT INTO `app`(`appName`, `appId`) VALUES ( \""+appName+"\",\""+appId+"\")";
+			sql = "INSERT INTO `app`(`appName`, `appId`) VALUES ( \"" + appName + "\",\"" + appId + "\")";
 			stmt.executeUpdate(sql);
 			stmt.close();
-		}catch(MySQLIntegrityConstraintViolationException s) {
-			//s.printStackTrace();
-			JsonObject error = Json.createObjectBuilder()
-				     .add("status", "Error")
-				     .add("payload", "AppName already exists, Try again with a new AppName").build();
+		} catch (MySQLIntegrityConstraintViolationException s) {
+			JsonObject error = Json.createObjectBuilder().add("status", "Error")
+					.add("payload", "AppName already exists, Try again with a new AppName").build();
+			return error;
+		} catch (SQLException s) {
+			JsonObject error = Json.createObjectBuilder().add("status", "Error")
+					.add("payload", "Internal Server Error, Try again later and contact Sushi").build();
 			return error;
 		}
-		catch(SQLException s) {
-			//s.printStackTrace();
-			JsonObject error = Json.createObjectBuilder()
-				     .add("status", "Error")
-				     .add("payload", "Internal Server Error, Try again later and contact Sushi").build();
-			return error;
-		}
-		JsonObject res = Json.createObjectBuilder()
-			     .add("status", "OK")
-			     .add("payload", appId).build();
+		JsonObject res = Json.createObjectBuilder().add("status", "OK").add("payload", appId).build();
 		return res;
 	}
-	
+
 	public JsonObject createUser(String username, String password, String appId) {
 		Statement stmt = null;
 		String uid = UUID.randomUUID().toString();
 		String sql = null;
 		try {
 			stmt = conn.createStatement();
-			sql = "INSERT INTO `user`(`uname`, `uid`, `pass`, `appId`) VALUES ( \""+username+"\",\""+uid+"\", \""+password+"\", \""+appId+"\")";
+			sql = "INSERT INTO `user`(`uname`, `uid`, `pass`, `appId`) VALUES ( \"" + username + "\",\"" + uid
+					+ "\", \"" + password + "\", \"" + appId + "\")";
 			stmt.executeUpdate(sql);
 			stmt.close();
-		}catch(MySQLIntegrityConstraintViolationException s) {
+		} catch (MySQLIntegrityConstraintViolationException s) {
 			String msg = "Username already exists, Try again with a new Username";
-			if(s.getMessage().contains("foreign key")) {
-				msg = "Invalid AppId, Please check and try again"; 
+			if (s.getMessage().contains("foreign key")) {
+				msg = "Invalid AppId, Please check and try again";
 			}
-			JsonObject error = Json.createObjectBuilder()
-				     .add("status", "Error")
-				     .add("payload", msg).build();
+			JsonObject error = Json.createObjectBuilder().add("status", "Error").add("payload", msg).build();
+			return error;
+		} catch (SQLException s) {
+			JsonObject error = Json.createObjectBuilder().add("status", "Error")
+					.add("payload", "Internal Server Error, Try again later and contact Sushi").build();
 			return error;
 		}
-		catch(SQLException s) {
-			//s.printStackTrace();
-			JsonObject error = Json.createObjectBuilder()
-				     .add("status", "Error")
-				     .add("payload", "Internal Server Error, Try again later and contact Sushi").build();
-			return error;
-		}
-		JsonObject res = Json.createObjectBuilder()
-			     .add("status", "OK")
-			     .add("payload", uid).build();
+		JsonObject res = Json.createObjectBuilder().add("status", "OK").add("payload", uid).build();
 		return res;
 	}
-	
+
 	public JsonObject generateToken(String uid, String pass, String appId) {
 		Statement stmt = null;
 		String uname = null;
@@ -129,48 +100,43 @@ public class Model {
 		String sql = null;
 		try {
 			stmt = conn.createStatement();
-			sql = "SELECT `uname` FROM `user` WHERE `uid`=\""+uid+"\" AND `pass`=\""+pass+"\" AND `appId`=\""+appId+"\""; 
+			sql = "SELECT `uname` FROM `user` WHERE `uid`=\"" + uid + "\" AND `pass`=\"" + pass + "\" AND `appId`=\""
+					+ appId + "\"";
 			ResultSet rs = stmt.executeQuery(sql);
-			// check if result is empty 
-			if(!rs.isBeforeFirst()) {
-				JsonObject error = Json.createObjectBuilder()
-					     .add("status", "Error")
-					     .add("payload", "Invalid credentials").build();
+			// check if result is empty
+			if (!rs.isBeforeFirst()) {
+				JsonObject error = Json.createObjectBuilder().add("status", "Error")
+						.add("payload", "Invalid credentials").build();
 				return error;
-			}else {
+			} else {
 				rs.next();
 				uname = rs.getString("uname");
 			}
 			rs.close();
-		}catch(SQLException s) {
-			s.printStackTrace();
-			JsonObject error = Json.createObjectBuilder()
-				     .add("status", "Error")
-				     .add("payload", "Internal Server Error, Try again later and contact Sushi").build();
+		} catch (SQLException s) {
+			JsonObject error = Json.createObjectBuilder().add("status", "Error")
+					.add("payload", "Internal Server Error, Try again later and contact Sushi").build();
 			return error;
 		}
-		
+
 		// insert the token into the database
 		try {
-			sql = "DELETE FROM `token` WHERE `uname`=\""+uname+"\" AND `appId`=\""+appId+"\"";
+			sql = "DELETE FROM `token` WHERE `uname`=\"" + uname + "\" AND `appId`=\"" + appId + "\"";
 			stmt.executeUpdate(sql);
-			sql = "INSERT INTO `token`(`token`, `uname`, `appId`) VALUES ( \""+token+"\",\""+uname+"\",\""+appId+"\")"; 
+			sql = "INSERT INTO `token`(`token`, `uname`, `appId`) VALUES ( \"" + token + "\",\"" + uname + "\",\""
+					+ appId + "\")";
 			stmt.executeUpdate(sql);
 			stmt.close();
-		}catch(SQLException s) {
-			//s.printStackTrace();
-			JsonObject error = Json.createObjectBuilder()
-				     .add("status", "Error")
-				     .add("payload", "Internal Server Error, Try again later and contact Sushi").build();
+		} catch (SQLException s) {
+			JsonObject error = Json.createObjectBuilder().add("status", "Error")
+					.add("payload", "Internal Server Error, Try again later and contact Sushi").build();
 			return error;
 		}
-		
-		JsonObject res = Json.createObjectBuilder()
-			     .add("status", "OK")
-			     .add("payload", token).build();
+
+		JsonObject res = Json.createObjectBuilder().add("status", "OK").add("payload", token).build();
 		return res;
 	}
-	
+
 	public JsonObject validateToken(String appId, String token) {
 		// query for the expiry time for the appID
 		// query for time
@@ -182,39 +148,36 @@ public class Model {
 		try {
 			stmt = conn.createStatement();
 			// get expiry time for an appId
-			sql = "SELECT `expiryTime` FROM `app` WHERE `appId`=\""+appId+"\""; 
+			sql = "SELECT `expiryTime` FROM `app` WHERE `appId`=\"" + appId + "\"";
 			ResultSet res = stmt.executeQuery(sql);
-			if(!res.isBeforeFirst()) {
-				JsonObject error = Json.createObjectBuilder()
-					     .add("status", "Error")
-					     .add("payload", "Invalid appId").build();
+			if (!res.isBeforeFirst()) {
+				JsonObject error = Json.createObjectBuilder().add("status", "Error").add("payload", "Invalid appId")
+						.build();
 				return error;
-			}else {
+			} else {
 				res.next();
 				expiryTime = res.getInt("expiryTime");
 			}
 			res.close();
 			// check for token in table
-			sql = "SELECT `toi` FROM `token` WHERE `appId`=\""+appId+"\" AND `token`=\""+token+"\""; 
+			sql = "SELECT `toi` FROM `token` WHERE `appId`=\"" + appId + "\" AND `token`=\"" + token + "\"";
 			ResultSet rs = stmt.executeQuery(sql);
-			// check if result is empty 
-			if(!rs.isBeforeFirst()) {
-				JsonObject error = Json.createObjectBuilder()
-					     .add("status", "Error")
-					     .add("payload", "Invalid").build();
+			// check if result is empty
+			if (!rs.isBeforeFirst()) {
+				JsonObject error = Json.createObjectBuilder().add("status", "Error").add("payload", "Invalid").build();
 				return error;
-			}else {
+			} else {
 				rs.next();
 				toi = rs.getString("toi");
 			}
 			rs.close();
-		}catch(SQLException s) {
+		} catch (SQLException s) {
 			s.printStackTrace();
-			JsonObject error = Json.createObjectBuilder()
-				     .add("status", "Error")
-				     .add("payload", "Internal Server Error, Try again later and contact Sushi").build();
+			JsonObject error = Json.createObjectBuilder().add("status", "Error")
+					.add("payload", "Internal Server Error, Try again later and contact Sushi").build();
 			return error;
 		}
+
 		// all time calculations done in IST
 		// the date object returns local time i.e IST
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -225,21 +188,14 @@ public class Model {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-//		System.out.println("Current Time: "+ currentDate);
-//		System.out.println("Toi: "+ toiDate);
-//
-//		System.out.println("Current Time: "+ currentDate.getTime());
-//		System.out.println("Toi: "+ toiDate.getTime());
-		long seconds = (currentDate.getTime()- toiDate.getTime())/1000;
-		
-		//System.out.println("Seconds "+ seconds);
+
+		long seconds = (currentDate.getTime() - toiDate.getTime()) / 1000;
+
 		String validity = "Valid";
-		if(seconds > expiryTime) {
+		if (seconds > expiryTime) {
 			validity = "Expired";
 		}
-		JsonObject res = Json.createObjectBuilder()
-			     .add("status", "OK")
-			     .add("payload", validity).build();
+		JsonObject res = Json.createObjectBuilder().add("status", "OK").add("payload", validity).build();
 		return res;
 	}
 
@@ -311,7 +267,6 @@ public class Model {
 			stmt.executeUpdate(sql);
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -349,7 +304,6 @@ public class Model {
 			stmt.executeUpdate(sql);
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
