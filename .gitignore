@@ -1,5 +1,10 @@
 .classpath
 .project
 .settings
+<<<<<<< Updated upstream
 .DS_Store
 target/
+=======
+
+/target/
+>>>>>>> Stashed changes
