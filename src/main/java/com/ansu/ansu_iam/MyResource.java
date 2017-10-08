@@ -1,4 +1,4 @@
-package com.sushi.ansu_iam;
+package com.ansu.ansu_iam;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

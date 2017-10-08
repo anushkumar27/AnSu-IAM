@@ -3,7 +3,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sushi</groupId>
+    <groupId>com.sush</groupId>
     <artifactId>ansu-iam</artifactId>
     <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
