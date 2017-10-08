@@ -24,7 +24,7 @@ public class Model {
 	Connection conn = null;
 
 	Model() throws ClassNotFoundException, SQLException {
-		Class.forName("com.mysql.jdbc.Driver");
+		Class.forName(JDBC_DRIVER);
 		conn = DriverManager.getConnection(DB_URL, USER, PASS);
 	}
 	
