@@ -29,21 +29,24 @@ public class Model {
 	}
 	
 //	public static void main( String args[]) {
-//		Model m;
 //		try {
-//			m = new Model();
-//			//System.out.println(m.createApplication("Text1"));"
-//			//System.out.println(m.generateToken("a7038b29-c16b-4f2a-aeb3-74652c0524cb", "123", "7ebe7894-4a80-47ce-b64f-3d9980a3ee45"));
-//			System.out.println(m.validateToken("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "d7a05c08-f941-4a47-9316-15eeb063617b"));
-//			//System.out.println(m.updateTime("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", 500));
-//			//System.out.println(m.invalidateToken("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "0fa5dac4-429e-450b-8232-39054eb2b710"));
-//			//System.out.println(m.removeUser("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "a7038b29-c16b-4f2a-aeb3-74652c0524cb"));
-//			System.out.println(m.getAppId("Text12"));
+//
+//			Model m = new Model();
+//		//	System.out.println(m.createUser("anush", "123", "7ebe7894-4a80-47ce-b64f-3d9980a3ee45"));
+////			//System.out.println(m.createApplication("Text1"));"
+//		//System.out.println(m.generateToken("b96ecc13-e227-4133-8746-98e445c3532b", "123", "0ef39447-a43d-4972-bcd7-e895e40f898d"));
+////			System.out.println(m.validateToken("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "d7a05c08-f941-4a47-9316-15eeb063617b"));
+////			//System.out.println(m.updateTime("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", 500));
+////			//System.out.println(m.invalidateToken("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "0fa5dac4-429e-450b-8232-39054eb2b710"));
+//	//System.out.println(m.removeUser("0ef39447-a43d-4972-bcd7-e895e40f898d", "b96ecc13-e227-4133-8746-98e445c3532b"));
+////			System.out.println(m.getAppId("Text12"));
 //		} catch (ClassNotFoundException | SQLException e) {
+//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 //		
 //	}
+	
 
 	public JsonObject createApplication(String appName) {
 		Statement stmt = null;
@@ -121,9 +124,9 @@ public class Model {
 
 		// insert the token into the database
 		try {
-			sql = "DELETE FROM `token` WHERE `uname`=\"" + uname + "\" AND `appId`=\"" + appId + "\"";
+			sql = "DELETE FROM `token` WHERE `uid`=\"" + uid + "\" AND `appId`=\"" + appId + "\"";
 			stmt.executeUpdate(sql);
-			sql = "INSERT INTO `token`(`token`, `uname`, `appId`) VALUES ( \"" + token + "\",\"" + uname + "\",\""
+			sql = "INSERT INTO `token`(`token`, `uid`, `appId`) VALUES ( \"" + token + "\",\"" + uid + "\",\""
 					+ appId + "\")";
 			stmt.executeUpdate(sql);
 			stmt.close();
