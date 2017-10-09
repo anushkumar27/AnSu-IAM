@@ -181,10 +181,11 @@ public class Model {
 			return error;
 		}
 
-		// all time calculations done in IST
-		// the date object returns local time i.e IST
+		// Amazon EC2 instance is configured for UTC timezone
+		// all time calculations done in UTC
+		// the date object returns local time i.e UTC
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		sdf.setTimeZone(TimeZone.getTimeZone("IST"));
+		sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
 		Date toiDate = null;
 		try {
 			toiDate = sdf.parse(toi);
@@ -193,7 +194,7 @@ public class Model {
 		}
 
 		long seconds = (currentDate.getTime() - toiDate.getTime()) / 1000;
-
+		System.out.println("Seconds elapsed: " + seconds);
 		String validity = "Valid";
 		if (seconds > expiryTime) {
 			validity = "Expired";
