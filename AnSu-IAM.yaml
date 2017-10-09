@@ -1,11 +1,13 @@
 swagger: '2.0'
 info:
-  description: This is the description of AnSu-IAM REST API. TODO
+  description: >-
+    AnSu-IAM is a IAM (Identity and Authorisation Management) service that can
+    be used for token based authentication.
   version: 1.0.0
   title: AnSu-IAM
   termsOfService: ''
   contact:
-    email: bla@gmail.com
+    email: ansu.iam.admin@gmail.com
 host: 52.14.172.233
 basePath: /
 tags:
@@ -58,7 +60,7 @@ paths:
     put:
       tags:
         - application
-      summary: Update application token life time details TODO
+      summary: Update application's token life time (in seconds)
       description: ''
       consumes:
         - application/x-www-form-urlencoded
@@ -67,22 +69,24 @@ paths:
       parameters:
         - in: formData
           name: appId
-          description: ID of the application
+          description: Application ID (see GET /app/)
           required: true
           type: string
         - in: formData
           name: seconds
-          description: seconds until which the token will be valid
+          description: seconds for which the token will be valid
           required: true
           type: integer
       responses:
         default:
-          description: TODO
+          description: Status of request
   /user/create:
     post:
       tags:
         - user
-      summary: Create new user
+      summary: >-
+        Create new user inside the scope of an application (identified by App
+        ID)
       description: ''
       consumes:
         - application/x-www-form-urlencoded
@@ -91,27 +95,27 @@ paths:
       parameters:
         - in: formData
           name: name
-          description: Name of the user
+          description: Username
           required: true
           type: string
         - in: formData
           name: pass
-          description: Password to be set
+          description: User's password
           required: true
           type: string
         - in: formData
           name: appId
-          description: Application ID to be used with
+          description: Application ID
           required: true
           type: string
       responses:
         default:
-          description: TODO
+          description: 'Status of request, includes User ID if successful in `payload` field'
   /user/delete:
     delete:
       tags:
         - user
-      summary: Delete user associated with appId
+      summary: Delete user associated with application (identified by App ID)
       description: ''
       consumes:
         - application/x-www-form-urlencoded
@@ -125,12 +129,12 @@ paths:
           type: string
         - in: formData
           name: appId
-          description: Application ID to be associated with
+          description: Application ID
           required: true
           type: string
       responses:
         default:
-          description: TODO
+          description: Status of request
   /token/checkValid:
     get:
       tags:
@@ -152,7 +156,9 @@ paths:
           type: string
       responses:
         default:
-          description: TODO
+          description: >-
+            Status of request, includes `Valid` or `Invalid` message in
+            `payload` field
   /token/generate:
     post:
       tags:
@@ -166,27 +172,27 @@ paths:
       parameters:
         - in: formData
           name: uid
-          description: User's UID
+          description: User IS
           required: true
           type: string
         - in: formData
           name: pass
-          description: Password to be set
+          description: User Password
           required: true
           type: string
         - in: formData
           name: appId
-          description: Application ID to be used with
+          description: Application ID
           required: true
           type: string
       responses:
         default:
-          description: TODO
+          description: 'Status of request, includes token string in `payload` field'
   /token/delete:
     post:
       tags:
         - token
-      summary: Remove token from database TODO
+      summary: Remove/Invalidate token
       description: ''
       consumes:
         - application/x-www-form-urlencoded
@@ -195,14 +201,14 @@ paths:
       parameters:
         - in: formData
           name: appId
-          description: Application ID whose token is to be deleted
+          description: Application ID
           required: true
           type: string
         - in: formData
           name: token
-          description: Token to be removed
+          description: Token to be removed/invalidated
           required: true
           type: string
       responses:
         default:
-          description: TODO
+          description: Status of request
