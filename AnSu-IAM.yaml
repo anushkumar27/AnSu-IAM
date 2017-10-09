@@ -1,0 +1,208 @@
+swagger: '2.0'
+info:
+  description: This is the description of AnSu-IAM REST API. TODO
+  version: 1.0.0
+  title: AnSu-IAM
+  termsOfService: ''
+  contact:
+    email: bla@gmail.com
+host: 52.14.172.233
+basePath: /
+tags:
+  - name: application
+    description: Application management
+  - name: user
+    description: User management
+  - name: token
+    description: Token management
+schemes:
+  - http
+paths:
+  /app/:
+    get:
+      tags:
+        - application
+      summary: Get the application's appId
+      description: ''
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: appName
+          description: Name of the application
+          required: true
+          type: string
+      responses:
+        default:
+          description: Check payload for appropriate response
+  /app/create:
+    post:
+      tags:
+        - application
+      summary: Register a new application
+      description: ''
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: appName
+          description: Name of the application to be registered
+          required: true
+          type: string
+      responses:
+        default:
+          description: Check payload for appropriate response
+  /app/update:
+    put:
+      tags:
+        - application
+      summary: Update application token life time details TODO
+      description: ''
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: appId
+          description: ID of the application
+          required: true
+          type: string
+        - in: formData
+          name: seconds
+          description: seconds until which the token will be valid
+          required: true
+          type: integer
+      responses:
+        default:
+          description: TODO
+  /user/create:
+    post:
+      tags:
+        - user
+      summary: Create new user
+      description: ''
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: name
+          description: Name of the user
+          required: true
+          type: string
+        - in: formData
+          name: pass
+          description: Password to be set
+          required: true
+          type: string
+        - in: formData
+          name: appId
+          description: Application ID to be used with
+          required: true
+          type: string
+      responses:
+        default:
+          description: TODO
+  /user/delete:
+    delete:
+      tags:
+        - user
+      summary: Delete user associated with appId
+      description: ''
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: uid
+          description: User ID
+          required: true
+          type: string
+        - in: formData
+          name: appId
+          description: Application ID to be associated with
+          required: true
+          type: string
+      responses:
+        default:
+          description: TODO
+  /token/checkValid:
+    get:
+      tags:
+        - token
+      summary: Check if token is valid
+      description: ''
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: appId
+          description: Application ID
+          required: true
+          type: string
+        - in: query
+          name: token
+          description: Token whose validity is to be checked
+          required: true
+          type: string
+      responses:
+        default:
+          description: TODO
+  /token/generate:
+    post:
+      tags:
+        - token
+      summary: Generate token
+      description: ''
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: uid
+          description: User's UID
+          required: true
+          type: string
+        - in: formData
+          name: pass
+          description: Password to be set
+          required: true
+          type: string
+        - in: formData
+          name: appId
+          description: Application ID to be used with
+          required: true
+          type: string
+      responses:
+        default:
+          description: TODO
+  /token/delete:
+    post:
+      tags:
+        - token
+      summary: Remove token from database TODO
+      description: ''
+      consumes:
+        - application/x-www-form-urlencoded
+      produces:
+        - application/json
+      parameters:
+        - in: formData
+          name: appId
+          description: Application ID whose token is to be deleted
+          required: true
+          type: string
+        - in: formData
+          name: token
+          description: Token to be removed
+          required: true
+          type: string
+      responses:
+        default:
+          description: TODO
