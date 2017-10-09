@@ -5,11 +5,8 @@ info:
     be used for token based authentication.
   version: 1.0.0
   title: AnSu-IAM
-  termsOfService: ''
-  contact:
-    email: ansu.iam.admin@gmail.com
 host: 52.14.172.233
-basePath: /
+basePath: /ansu-iam
 tags:
   - name: application
     description: Application management
