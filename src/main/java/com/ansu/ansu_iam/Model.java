@@ -19,7 +19,7 @@ public class Model {
 
 	// Database credentials
 	static final String USER = "root";
-	static final String PASS = "";
+	static final String PASS = "root";
 
 	Connection conn = null;
 
@@ -28,22 +28,22 @@ public class Model {
 		conn = DriverManager.getConnection(DB_URL, USER, PASS);
 	}
 	
-//	public static void main( String args[]) {
-//		Model m;
-//		try {
-//			m = new Model();
-//			//System.out.println(m.createApplication("Text1"));"
-//			//System.out.println(m.generateToken("a7038b29-c16b-4f2a-aeb3-74652c0524cb", "123", "7ebe7894-4a80-47ce-b64f-3d9980a3ee45"));
-//			System.out.println(m.validateToken("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "d7a05c08-f941-4a47-9316-15eeb063617b"));
-//			//System.out.println(m.updateTime("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", 500));
-//			//System.out.println(m.invalidateToken("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "0fa5dac4-429e-450b-8232-39054eb2b710"));
-//			//System.out.println(m.removeUser("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "a7038b29-c16b-4f2a-aeb3-74652c0524cb"));
-//			System.out.println(m.getAppId("Text12"));
-//		} catch (ClassNotFoundException | SQLException e) {
-//			e.printStackTrace();
-//		}
-//		
-//	}
+	public static void main( String args[]) {
+		Model m;
+		try {
+			m = new Model();
+			//System.out.println(m.createApplication("Text1"));"
+			//System.out.println(m.generateToken("a7038b29-c16b-4f2a-aeb3-74652c0524cb", "123", "7ebe7894-4a80-47ce-b64f-3d9980a3ee45"));
+			System.out.println(m.validateToken("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "d7a05c08-f941-4a47-9316-15eeb063617b"));
+			//System.out.println(m.updateTime("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", 500));
+			//System.out.println(m.invalidateToken("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "0fa5dac4-429e-450b-8232-39054eb2b710"));
+			//System.out.println(m.removeUser("7ebe7894-4a80-47ce-b64f-3d9980a3ee45", "a7038b29-c16b-4f2a-aeb3-74652c0524cb"));
+			System.out.println(m.getAppId("Text12"));
+		} catch (ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 
 	public JsonObject createApplication(String appName) {
 		Statement stmt = null;

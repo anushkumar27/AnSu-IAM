@@ -14,7 +14,7 @@ import javax.ws.rs.core.Response;
 
 @Path("/user")
 public class UserResource {
-
+	
 	@POST
 	@Path("/create")
 	@Produces(MediaType.APPLICATION_JSON)
