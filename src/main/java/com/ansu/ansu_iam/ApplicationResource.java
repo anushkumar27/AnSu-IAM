@@ -18,18 +18,24 @@ import javax.ws.rs.core.Response;
 public class ApplicationResource {
 	
 	@GET
-	@Path("/")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getAppId(@QueryParam("appName") String appName) {
 		JsonObject resObj = null;
-		
-		try {
-			Model m = new Model();
-			resObj = m.getAppId(appName);
-		} catch (ClassNotFoundException | SQLException e) {
+		if(appName != null) {
+			try {
+				Model m = new Model();
+				resObj = m.getAppId(appName);
+			} catch (ClassNotFoundException | SQLException e) {
+				resObj = Json.createObjectBuilder()
+						.add("status", "Error")
+						.add("payload", "Internal Server Error, please contact admins")
+						.build();
+			}
+		}
+		else {
 			resObj = Json.createObjectBuilder()
 					.add("status", "Error")
-					.add("payload", "Internal Server Error, please contact admins")
+					.add("payload", "Missing appId parameter")
 					.build();
 		}
 
@@ -43,13 +49,21 @@ public class ApplicationResource {
 			@FormParam("appName") String appName) {
 		JsonObject resObj = null;
 		
-		try {
-			Model m = new Model();
-			resObj = m.createApplication(appName);
-		} catch (ClassNotFoundException | SQLException e) {
+		if(appName != null) {
+			try {
+				Model m = new Model();
+				resObj = m.createApplication(appName);
+			} catch (ClassNotFoundException | SQLException e) {
+				resObj = Json.createObjectBuilder()
+						.add("status", "Error")
+						.add("payload", "Internal Server Error, please contact admins")
+						.build();
+			}
+		}
+		else {
 			resObj = Json.createObjectBuilder()
 					.add("status", "Error")
-					.add("payload", "Internal Server Error, please contact admins")
+					.add("payload", "Missing appId parameter")
 					.build();
 		}
 		
@@ -63,13 +77,26 @@ public class ApplicationResource {
 			@FormParam("appId") String appId,
 			@FormParam("seconds") int seconds) {
 		JsonObject resObj = null;
-
-		try {
-			Model m = new Model();
-			resObj = m.updateTime(appId, seconds);
-		} catch (ClassNotFoundException | SQLException e) {
-			resObj = Json.createObjectBuilder().add("status", "Error")
-					.add("payload", "Internal Server Error, please contact admins").build();
+		if(appId == null) {
+			resObj = Json.createObjectBuilder()
+					.add("status", "Error")
+					.add("payload", "Missing appId parameter")
+					.build();
+		}
+		else if (seconds <= 0) {
+			resObj = Json.createObjectBuilder()
+					.add("status", "Error")
+					.add("payload", "Missing seconds parameter or seconds is <= 0")
+					.build();
+		}
+		else {
+			try {
+				Model m = new Model();
+				resObj = m.updateTime(appId, seconds);
+			} catch (ClassNotFoundException | SQLException e) {
+				resObj = Json.createObjectBuilder().add("status", "Error")
+						.add("payload", "Internal Server Error, please contact admins").build();
+			}
 		}
 
 		return Response.ok(resObj.toString(), MediaType.APPLICATION_JSON).build();

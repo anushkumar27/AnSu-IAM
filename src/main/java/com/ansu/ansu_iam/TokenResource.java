@@ -25,16 +25,30 @@ public class TokenResource {
 			@QueryParam("token") String token) {
 		JsonObject resObj = null;
 		
-		try {
-			Model m = new Model();
-			resObj = m.validateToken(appId, token);
-		} catch (ClassNotFoundException | SQLException e) {
+		if(appId == null) {
 			resObj = Json.createObjectBuilder()
 					.add("status", "Error")
-					.add("payload", "Internal Server Error, please contact admins")
+					.add("payload", "Missing appId parameter")
 					.build();
 		}
-				
+		else if(token == null) {
+			resObj = Json.createObjectBuilder()
+					.add("status", "Error")
+					.add("payload", "Missing token parameter")
+					.build();
+		}
+		else {
+			try {
+				Model m = new Model();
+				resObj = m.validateToken(appId, token);
+			} catch (ClassNotFoundException | SQLException e) {
+				resObj = Json.createObjectBuilder()
+						.add("status", "Error")
+						.add("payload", "Internal Server Error, please contact admins")
+						.build();
+			}
+		}
+		
 		return Response.ok(resObj.toString(), MediaType.APPLICATION_JSON).build();
 	}
 	
@@ -47,14 +61,34 @@ public class TokenResource {
 			@FormParam("appId") String appId) {
 		JsonObject resObj = null;
 		
-		try {
-			Model m = new Model();
-			resObj = m.generateToken(uid, password, appId);
-		} catch (ClassNotFoundException | SQLException e) {
+		if(uid == null) {
 			resObj = Json.createObjectBuilder()
 					.add("status", "Error")
-					.add("payload", "Internal Server Error, please contact admins")
+					.add("payload", "Missing uid parameter")
 					.build();
+		}
+		else if(password == null) {
+			resObj = Json.createObjectBuilder()
+					.add("status", "Error")
+					.add("payload", "Missing password parameter")
+					.build();
+		}
+		else if(appId == null) {
+			resObj = Json.createObjectBuilder()
+					.add("status", "Error")
+					.add("payload", "Missing appId parameter")
+					.build();
+		}
+		else {
+			try {
+				Model m = new Model();
+				resObj = m.generateToken(uid, password, appId);
+			} catch (ClassNotFoundException | SQLException e) {
+				resObj = Json.createObjectBuilder()
+						.add("status", "Error")
+						.add("payload", "Internal Server Error, please contact admins")
+						.build();
+			}
 		}
 				
 		return Response.ok(resObj.toString(), MediaType.APPLICATION_JSON).build();
@@ -68,16 +102,30 @@ public class TokenResource {
 			@FormParam("token") String token) {
 		JsonObject resObj = null;
 		
-		try {
-			Model m = new Model();
-			resObj = m.invalidateToken(appId, token);
-		} catch (ClassNotFoundException | SQLException e) {
+		if(appId == null) {
 			resObj = Json.createObjectBuilder()
 					.add("status", "Error")
-					.add("payload", "Internal Server Error, please contact admins")
+					.add("payload", "Missing appId parameter")
 					.build();
 		}
-				
+		else if(token == null) {
+			resObj = Json.createObjectBuilder()
+					.add("status", "Error")
+					.add("payload", "Missing token parameter")
+					.build();
+		}
+		else {
+			try {
+				Model m = new Model();
+				resObj = m.invalidateToken(appId, token);
+			} catch (ClassNotFoundException | SQLException e) {
+				resObj = Json.createObjectBuilder()
+						.add("status", "Error")
+						.add("payload", "Internal Server Error, please contact admins")
+						.build();
+			}
+		}
+	
 		return Response.ok(resObj.toString(), MediaType.APPLICATION_JSON).build();
 	}
 }
