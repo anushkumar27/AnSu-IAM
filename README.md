@@ -1,14 +1,10 @@
 AnSu-IAM
 ========
-This is the description of AnSu-IAM REST API. TODO
+AnSu-IAM is a IAM (Identity and Authorisation Management) service that can be used for token based authentication.
 
 **Version:** 1.0.0
 
-**Terms of service:**  
-
-
-**Contact information:**  
-ansu.iam.admin@gmail.com  
+**BasePath:** /ansu-iam
 
 ### /app/
 ---
@@ -51,7 +47,7 @@ ansu.iam.admin@gmail.com
 ### /app/update
 ---
 ##### ***PUT***
-**Summary:** Update application token life time details TODO
+**Summary:** Update application's token life time (in seconds)
 
 **Description:** 
 
@@ -59,19 +55,19 @@ ansu.iam.admin@gmail.com
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| appId | formData | ID of the application | Yes | string |
-| seconds | formData | seconds until which the token will be valid | Yes | integer |
+| appId | formData | Application ID (see GET /app/) | Yes | string |
+| seconds | formData | seconds for which the token will be valid | Yes | integer |
 
 **Responses**
 
 | Code | Description |
 | ---- | ----------- |
-| default | TODO |
+| default | Status of request |
 
 ### /user/create
 ---
 ##### ***POST***
-**Summary:** Create new user
+**Summary:** Create new user inside the scope of an application (identified by App ID)
 
 **Description:** 
 
@@ -79,20 +75,20 @@ ansu.iam.admin@gmail.com
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| name | formData | Name of the user | Yes | string |
-| pass | formData | Password to be set | Yes | string |
-| appId | formData | Application ID to be used with | Yes | string |
+| name | formData | Username | Yes | string |
+| pass | formData | User's password | Yes | string |
+| appId | formData | Application ID | Yes | string |
 
 **Responses**
 
 | Code | Description |
 | ---- | ----------- |
-| default | TODO |
+| default | Status of request, includes User ID if successful in `payload` field |
 
 ### /user/delete
 ---
 ##### ***DELETE***
-**Summary:** Delete user associated with appId
+**Summary:** Delete user associated with application (identified by App ID)
 
 **Description:** 
 
@@ -101,13 +97,13 @@ ansu.iam.admin@gmail.com
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
 | uid | formData | User ID | Yes | string |
-| appId | formData | Application ID to be associated with | Yes | string |
+| appId | formData | Application ID | Yes | string |
 
 **Responses**
 
 | Code | Description |
 | ---- | ----------- |
-| default | TODO |
+| default | Status of request |
 
 ### /token/checkValid
 ---
@@ -127,7 +123,7 @@ ansu.iam.admin@gmail.com
 
 | Code | Description |
 | ---- | ----------- |
-| default | TODO |
+| default | Status of request, includes `Valid` or `Invalid` message in `payload` field |
 
 ### /token/generate
 ---
@@ -140,20 +136,20 @@ ansu.iam.admin@gmail.com
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| uid | formData | User's UID | Yes | string |
-| pass | formData | Password to be set | Yes | string |
-| appId | formData | Application ID to be used with | Yes | string |
+| uid | formData | User IS | Yes | string |
+| pass | formData | User Password | Yes | string |
+| appId | formData | Application ID | Yes | string |
 
 **Responses**
 
 | Code | Description |
 | ---- | ----------- |
-| default | TODO |
+| default | Status of request, includes token string in `payload` field |
 
 ### /token/delete
 ---
 ##### ***POST***
-**Summary:** Remove token from database TODO
+**Summary:** Remove/Invalidate token
 
 **Description:** 
 
@@ -161,11 +157,11 @@ ansu.iam.admin@gmail.com
 
 | Name | Located in | Description | Required | Schema |
 | ---- | ---------- | ----------- | -------- | ---- |
-| appId | formData | Application ID whose token is to be deleted | Yes | string |
-| token | formData | Token to be removed | Yes | string |
+| appId | formData | Application ID | Yes | string |
+| token | formData | Token to be removed/invalidated | Yes | string |
 
 **Responses**
 
 | Code | Description |
 | ---- | ----------- |
-| default | TODO |
+| default | Status of request |
