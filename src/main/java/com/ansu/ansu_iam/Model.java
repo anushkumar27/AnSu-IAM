@@ -19,7 +19,7 @@ public class Model {
 
 	// Database credentials
 	static final String USER = "root";
-	static final String PASS = "";
+	static final String PASS = "root";
 
 	Connection conn = null;
 
