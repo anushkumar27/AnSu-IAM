@@ -5,7 +5,7 @@ info:
     be used for token based authentication.
   version: 1.0.0
   title: AnSu-IAM
-host: 52.14.172.233
+host: 35.154.174.148
 basePath: /ansu-iam
 tags:
   - name: application

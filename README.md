@@ -4,6 +4,8 @@ AnSu-IAM is a IAM (Identity and Authorisation Management) service that can be us
 
 **Version:** 1.0.0
 
+**Host:** [http://35.154.174.148](http://35.154.174.148)
+
 **BasePath:** /ansu-iam
 
 ### /app/
